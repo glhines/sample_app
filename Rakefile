@@ -3,6 +3,7 @@
 
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
+require 'rake/dsl_definition'
 
 # Workaround for rake 0.9.2 issue: uninitialized constant Rake::DSL 
 module ::SampleApp
