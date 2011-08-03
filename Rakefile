@@ -4,4 +4,16 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
+# Workaround for rake 0.9.2 issue: uninitialized constant Rake::DSL 
+module ::SampleApp
+  class Application
+    include Rake::DSL
+  end
+end
+
+module ::RakeFileUtils
+  extend Rake::FileUtilsExt
+end
+
 SampleApp::Application.load_tasks
+
