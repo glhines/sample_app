@@ -1,4 +1,6 @@
 require 'rubygems'
+
+=begin  Banishment of spork!
 require 'spork'
 
 Spork.prefork do
@@ -6,7 +8,10 @@ Spork.prefork do
   # if you change any configuration or code from libraries loaded here, you'll
   # need to restart spork for it take effect.
   ENV["RAILS_ENV"] ||= 'test'
-  require File.expand_path("../../config/environment", __FILE__)
+  unless defined?(Rails)
+    #require File.expand_path("../../config/environment", __FILE__)
+    require File.dirname(__FILE__) + "/../config/environment"
+  end
   require 'rspec/rails'
 
   # Requires supporting files with custom matchers and macros, etc,
@@ -35,6 +40,8 @@ end
 Spork.each_run do
   # This code will be run each time you run your specs.
 end
+
+=end
 
 # --- Instructions ---
 # Sort the contents of this file into a Spork.prefork and a Spork.each_run
@@ -70,7 +77,8 @@ end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
-require File.expand_path("../../config/environment", __FILE__)
+#require File.expand_path("../../config/environment", __FILE__)
+require File.dirname(__FILE__) + "/../config/environment"
 require 'rspec/rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -94,6 +102,9 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
+  
+  # Enable view rendering
+  config.include RSpec::Rails::ViewRendering
 
   def test_sign_in(user)
     controller.sign_in(user)
