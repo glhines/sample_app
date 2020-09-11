@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
-  before_filter :authenticate,   :except => [:show, :new, :create]
-  before_filter :correct_user,   :only => [:edit, :update]
-  before_filter :admin_user,     :only => :destroy
-  before_filter :signed_in_user, :only => [:new, :create]
+  # before_filter :authenticate,   :except => [:show, :new, :create]
+  before_action :authenticate,   :except => [:show, :new, :create]
+  before_action :correct_user,   :only => [:edit, :update]
+  before_action :admin_user,     :only => :destroy
+  before_action :signed_in_user, :only => [:new, :create]
 
   def index
     @title = "All users"
@@ -38,7 +39,8 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update_attributes(params[:user])
+    #if @user.update_attributes(params[:user])
+    if @user.update!(user_params)
       flash[:success] = "Profile updated."
       redirect_to @user
     else
@@ -80,6 +82,14 @@ class UsersController < ApplicationController
 
     def signed_in_user
       redirect_to(root_path) if signed_in?
+    end
+
+    # Using a private method to encapsulate the permissible parameters
+    # is just a good pattern since you'll be able to reuse the same
+    # permit list between create and update. Also, you can specialize
+    # this method with per-user checking of permissible attributes.
+    def user_params
+      params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
 
 end
