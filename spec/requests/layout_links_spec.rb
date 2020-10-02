@@ -1,3 +1,4 @@
+=begin
 require 'spec_helper'
 
 describe "LayoutLinks" do
@@ -70,4 +71,49 @@ describe "LayoutLinks" do
       
   end
   
+end
+=end
+require 'rails_helper'
+
+RSpec.feature "LayoutLinks", :type => :feature do
+
+  scenario "should have a Home page at '/'" do
+    visit '/'
+    expect(page).to have_title("Home")
+  end
+
+  scenario "should have a Contact page at '/contact" do
+    visit '/contact'
+    expect(page).to have_title("Contact")
+  end
+
+  scenario "should have an About page at '/about'" do
+    visit '/about'
+    expect(page).to have_title("About")
+  end
+
+  scenario "should have a Help page at '/help'" do
+    visit '/help'
+    expect(page).to have_title("Help")
+  end
+
+  scenario "should have a Sign Up page at '/signup'" do
+    visit '/signup'
+    expect(page).to have_title("Sign up")
+  end
+
+  scenario "should have the right links on the layout" do
+    visit root_path
+    click_link "About"
+    expect(page).to have_title("About")
+    click_link "Help"
+    expect(page).to have_title("Help")
+    click_link "Contact"
+    expect(page).to have_title("Contact")
+    click_link "Home"
+    expect(page).to have_title("Home")
+    click_link "Sign up now!"
+    expect(page).to have_title("Sign up")
+  end
+
 end

@@ -37,10 +37,10 @@ describe PagesController do
 
       it "should have the right follower/following counts" do
         get :home
-        response.should have_selector("a", :href => following_user_path(@user),
-                                           :content => "0 following")
-        response.should have_selector("a", :href => followers_user_path(@user),
-                                           :content => "1 follower")
+        expect(response.body).to have_link("0 following",
+                                            href: following_user_path(@user))
+        expect(response.body).to have_link("1 follower",
+                                            href: followers_user_path(@user))
       end
     end
   end

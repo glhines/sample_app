@@ -7,7 +7,7 @@ gem 'rails', '6.0.3.3'
 
 gem 'sqlite3', '1.4.2'
 gem 'tzinfo-data'
-gem 'gravatar_image_tag', '1.0.0.pre2'
+gem 'gravatar_image_tag', '1.2.0'
 gem 'will_paginate'
 
 group :development do
