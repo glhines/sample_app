@@ -16,41 +16,40 @@ describe UsersController do
     describe "for signed-in users" do
 
       before(:each) do
-        @user = test_sign_in(Factory(:user))
-        second = Factory(:user, :name => "Bob", :email => "another@example.com")
-        third  = Factory(:user, :name => "Ben", :email => "another@example.net")
+        @base_title = "Ruby on Rails Tutorial Sample App | "
+        @user = test_sign_in(FactoryBot.create(:user))
+        second = FactoryBot.create(:user, :name => "Bob", :email => "another@example.com")
+        third  = FactoryBot.create(:user, :name => "Ben", :email => "another@example.net")
 
         @users = [@user, second, third]
         30.times do
-          @users << Factory(:user, :email => Factory.next(:email))
+          @users << FactoryBot.create(:user, :email => FactoryBot.generate(:email))
         end
       end
 
       it "should be successful" do
         get :index
-        response.should be_success
+        expect(response).to have_http_status(:success)
       end
 
       it "should have the right title" do
         get :index
-        response.should have_selector("title", :content => "All users")
+        expect(response.body).to have_title(@base_title + "All users")
       end
 
       it "should have an element for each user" do
         get :index
         @users[0..2].each do |user|
-          response.should have_selector("li", :content => user.name)
+          expect(response.body).to have_selector("li", :text => user.name)
         end
       end
 
       it "should paginate users" do
         get :index
-        response.should have_selector("div.pagination")
-        response.should have_selector("span.disabled", :content => "Previous")
-        response.should have_selector("a", :href => "/users?page=2",
-                                           :content => "2")
-        response.should have_selector("a", :href => "/users?page=2",
-                                           :content => "Next")
+        expect(response.body).to have_selector("div.pagination")
+        expect(response.body).to have_selector("span.disabled", :text => "Previous")
+        expect(response.body).to have_link("2", :href => "/users?page=2")
+        expect(response.body).to have_link("Next", :href => "/users?page=2")
       end
     end
   end
@@ -58,40 +57,43 @@ describe UsersController do
   describe "GET 'show'" do
 
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryBot.create(:user)
     end
 
     it "should be successful" do
-      get :show, :id => @user
-      response.should be_success
+      # get :show, :id => @user
+      # response.should be_success
+      get :show, :params => { :id => @user }
+      expect(response).to have_http_status(:success)
     end
 
     it "should find the right user" do
-      get :show, :id => @user
+      get :show, :params => { :id => @user }
       assigns(:user).should == @user
     end
 
     it "should have the right title" do
-      get :show, :id => @user
-      response.should have_selector("title", :content => @user.name)
+      # response.should have_selector("title", :content => @user.name)
+      get :show, :params => { :id => @user }
+      expect(response.body).to have_title(@user.name)
     end
 
     it "should include the user's name" do
-      get :show, :id => @user
-      response.should have_selector("h1", :content => @user.name)
+      get :show, :params => { :id => @user }
+      expect(response.body).to have_selector("h1", :text => @user.name)
     end
 
     it "should have a profile image" do
-      get :show, :id => @user
-      response.should have_selector("h1>img", :class => "gravatar")
+      get :show, :params => { :id => @user }
+      expect(response.body).to have_selector("h1>img", :class => "gravatar")
     end
 
     it "should show the user's microposts" do
-      mp1 = Factory(:micropost, :user => @user, :content => "Foo bar")
-      mp2 = Factory(:micropost, :user => @user, :content => "Baz quux")
-      get :show, :id => @user
-      response.should have_selector("span.content", :content => mp1.content)
-      response.should have_selector("span.content", :content => mp2.content)
+      mp1 = FactoryBot.create(:micropost, :user => @user, :content => "Foo bar")
+      mp2 = FactoryBot.create(:micropost, :user => @user, :content => "Baz quux")
+      get :show, :params => { :id => @user }
+      expect(response.body).to have_selector("span.content", :text => mp1.content)
+      expect(response.body).to have_selector("span.content", :text => mp2.content)
     end
     
   end
@@ -99,32 +101,33 @@ describe UsersController do
   describe "GET 'new'" do
     it "should be successful" do
       get :new
-      response.should be_success
+      expect(response).to have_http_status(:success)
     end
     
     it "should have the right title" do
+      @base_title = "Ruby on Rails Tutorial Sample App | "
       get :new
-      response.should have_selector("title", :content => "Sign up")
+      expect(response.body).to have_title(@base_title + "Sign up")
     end
 
     it "should have a name field" do
       get :new
-      response.should have_selector("input[name='user[name]'][type='text']")
+      expect(response.body).to have_selector("input[name='user[name]'][type='text']")
     end
 
     it "should have an email field" do
       get :new
-      response.should have_selector("input[name='user[email]'][type='text']")
+      expect(response.body).to have_selector("input[name='user[email]'][type='text']")
     end
 
     it "should have a password field" do
       get :new
-      response.should have_selector("input[name='user[password]'][type='password']")
+      expect(response.body).to have_selector("input[name='user[password]'][type='password']")
     end
 
     it "should have a password confirmation field" do
       get :new
-      response.should have_selector("input[name='user[password_confirmation]'][type='password']")
+      expect(response.body).to have_selector("input[name='user[password_confirmation]'][type='password']")
     end
 
   end
@@ -134,24 +137,25 @@ describe UsersController do
     describe "failure" do
 
       before(:each) do
+        @base_title = "Ruby on Rails Tutorial Sample App | "
         @attr = { :name => "", :email => "", :password => "",
                   :password_confirmation => "" }
       end
 
       it "should not create a user" do
         lambda do
-          post :create, :user => @attr
+          post :create, :params => { :user => @attr }
         end.should_not change(User, :count)
       end
 
       it "should have the right title" do
-        post :create, :user => @attr
-        response.should have_selector("title", :content => "Sign up")
+        post :create, :params => { :user => @attr }
+        expect(response.body).to have_title(@base_title + "Sign up")
       end
 
       it "should render the 'new' page" do
-        post :create, :user => @attr
-        response.should render_template('new')
+        post :create, :params => { :user => @attr }
+        expect(response.body).to render_template('new')
       end
     end
 
@@ -164,22 +168,22 @@ describe UsersController do
 
       it "should create a user" do
         lambda do
-          post :create, :user => @attr
+          post :create, :params => { :user => @attr }
         end.should change(User, :count).by(1)
       end
 
       it "should redirect to the user show page" do
-        post :create, :user => @attr
+       post :create, :params => { :user => @attr }
         response.should redirect_to(user_path(assigns(:user)))
       end    
 
       it "should have a welcome message" do
-        post :create, :user => @attr
+        post :create, :params => { :user => @attr }
         flash[:success].should =~ /welcome to the sample app/i
       end
 
       it "should sign the user in" do
-        post :create, :user => @attr
+        post :create, :params => { :user => @attr }
         controller.should be_signed_in
       end
       
@@ -190,32 +194,31 @@ describe UsersController do
   describe "GET 'edit'" do
 
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryBot.create(:user)
       test_sign_in(@user)
     end
 
     it "should be successful" do
-      get :edit, :id => @user
-      response.should be_success
+      get :edit, :params => { :id => @user }
+      expect(response).to have_http_status(:success)
     end
 
     it "should have the right title" do
-      get :edit, :id => @user
-      response.should have_selector("title", :content => "Edit user")
+      get :edit, :params => { :id => @user }
+      expect(response.body).to have_title("Edit user")
     end
 
     it "should have a link to change the Gravatar" do
-      get :edit, :id => @user
+      get :edit, :params => { :id => @user }
       gravatar_url = "http://gravatar.com/emails"
-      response.should have_selector("a", :href => gravatar_url,
-                                         :content => "change")
+      expect(response.body).to have_link("change", :href => gravatar_url)
     end
   end
 
   describe "PUT 'update'" do
 
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryBot.create(:user)
       test_sign_in(@user)
     end
 
@@ -227,13 +230,13 @@ describe UsersController do
       end
 
       it "should render the 'edit' page" do
-        put :update, :id => @user, :user => @attr
-        response.should render_template('edit')
+        put :update, :params => { :id => @user, :user => @attr }
+        expect(response).to render_template('edit')
       end
 
       it "should have the right title" do
-        put :update, :id => @user, :user => @attr
-        response.should have_selector("title", :content => "Edit user")
+        put :update, :params => { :id => @user, :user => @attr }
+        expect(response.body).to have_title("Edit user")
       end
     end
 
@@ -245,20 +248,20 @@ describe UsersController do
       end
 
       it "should change the user's attributes" do
-        put :update, :id => @user, :user => @attr
+        put :update, :params => { :id => @user, :user => @attr }
         @user.reload
-        @user.name.should  == @attr[:name]
-        @user.email.should == @attr[:email]
+        expect(@user.name).to eq(@attr[:name])
+        expect(@user.email).to eq(@attr[:email])
       end
 
       it "should redirect to the user show page" do
-        put :update, :id => @user, :user => @attr
-        response.should redirect_to(user_path(@user))
+        put :update, :params => { :id => @user, :user => @attr }
+        expect(response).to redirect_to(user_path(@user))
       end
 
       it "should have a flash message" do
-        put :update, :id => @user, :user => @attr
-        flash[:success].should =~ /updated/
+        put :update, :params => { :id => @user, :user => @attr }
+        expect(flash[:success]).to match(/updated/)
       end
     end
   end
@@ -266,18 +269,18 @@ describe UsersController do
   describe "authentication of edit/update pages" do
 
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryBot.create(:user)
     end
 
     describe "for non-signed-in users" do
 
       it "should deny access to 'edit'" do
-        get :edit, :id => @user
+        get :edit, :params => { :id => @user }
         response.should redirect_to(signin_path)
       end
 
       it "should deny access to 'update'" do
-        put :update, :id => @user, :user => {}
+        put :update, :params => { :id => @user, :user => {} }
         response.should redirect_to(signin_path)
       end
     end
@@ -285,17 +288,17 @@ describe UsersController do
     describe "for signed-in users" do
 
       before(:each) do
-        wrong_user = Factory(:user, :email => "user@example.net")
+        wrong_user = FactoryBot.create(:user, :email => "user@example.net")
         test_sign_in(wrong_user)
       end
 
       it "should require matching users for 'edit'" do
-        get :edit, :id => @user
+        get :edit, :params => { :id => @user }
         response.should redirect_to(root_path)
       end
 
       it "should require matching users for 'update'" do
-        put :update, :id => @user, :user => {}
+        put :update, :params => { :id => @user, :user => {} }
         response.should redirect_to(root_path)
       end
     end
@@ -304,12 +307,12 @@ describe UsersController do
   describe "DELETE 'destroy'" do
 
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryBot.create(:user)
     end
 
     describe "as a non-signed-in user" do
       it "should deny access" do
-        delete :destroy, :id => @user
+        delete :destroy, :params => { :id => @user }
         response.should redirect_to(signin_path)
       end
     end
@@ -317,7 +320,7 @@ describe UsersController do
     describe "as a non-admin user" do
       it "should protect the page" do
         test_sign_in(@user)
-        delete :destroy, :id => @user
+        delete :destroy, :params => { :id => @user }
         response.should redirect_to(root_path)
       end
     end
@@ -325,18 +328,18 @@ describe UsersController do
     describe "as an admin user" do
 
       before(:each) do
-        admin = Factory(:user, :email => "admin@example.com", :admin => true)
+        admin = FactoryBot.create(:user, :email => "admin@example.com", :admin => true)
         test_sign_in(admin)
       end
 
       it "should destroy the user" do
         lambda do
-          delete :destroy, :id => @user
+          delete :destroy, :params => { :id => @user }
         end.should change(User, :count).by(-1)
       end
 
       it "should redirect to the users page" do
-        delete :destroy, :id => @user
+        delete :destroy, :params => { :id => @user }
         response.should redirect_to(users_path)
       end
     end
@@ -347,12 +350,12 @@ describe UsersController do
     describe "when not signed in" do
 
       it "should protect 'following'" do
-        get :following, :id => 1
+        get :following, :params => { :id => 1 }
         response.should redirect_to(signin_path)
       end
 
       it "should protect 'followers'" do
-        get :followers, :id => 1
+        get :followers, :params => { :id => 1 }
         response.should redirect_to(signin_path)
       end
     end
@@ -360,21 +363,19 @@ describe UsersController do
     describe "when signed in" do
 
       before(:each) do
-        @user = test_sign_in(Factory(:user))
-        @other_user = Factory(:user, :email => Factory.next(:email))
+        @user = test_sign_in(FactoryBot.create(:user))
+        @other_user = FactoryBot.create(:user, :email => FactoryBot.generate(:email))
         @user.follow!(@other_user)
       end
 
       it "should show user following" do
-        get :following, :id => @user
-        response.should have_selector("a", :href => user_path(@other_user),
-                                           :content => @other_user.name)
+        get :following, :params => { :id => @user }
+        expect(response.body).to have_link(@other_user.name, :href => user_path(@other_user))
       end
 
       it "should show user followers" do
-        get :followers, :id => @other_user
-        response.should have_selector("a", :href => user_path(@user),
-                                           :content => @user.name)
+        get :followers, :params => { :id => @other_user }
+        expect(response.body).to have_link(@user.name, :href => user_path(@user))
       end
     end
   end

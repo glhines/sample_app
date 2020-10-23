@@ -22,7 +22,9 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(params[:user])
+    # @user = User.new(params[:user])
+    @user = User.new(user_params)
+
     if @user.save
       sign_in @user # Automatically sign new user into a Session
       flash[:success] = "Welcome to the Sample App!"
