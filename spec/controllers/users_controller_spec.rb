@@ -8,8 +8,8 @@ RSpec.describe UsersController, :type => :controller do
     describe "for non-signed-in users" do
       it "should deny access" do
         get :index
-        response.should redirect_to(signin_path)
-        flash[:notice].should =~ /sign in/i
+        expect(response).to redirect_to(signin_path)
+        expect(flash[:notice]).to match(/sign in/i)
       end
     end
 
@@ -69,7 +69,7 @@ RSpec.describe UsersController, :type => :controller do
 
     it "should find the right user" do
       get :show, :params => { :id => @user }
-      assigns(:user).should == @user
+      expect(assigns(:user)).to eq(@user)
     end
 
     it "should have the right title" do
@@ -173,18 +173,18 @@ RSpec.describe UsersController, :type => :controller do
       end
 
       it "should redirect to the user show page" do
-       post :create, :params => { :user => @attr }
-        response.should redirect_to(user_path(assigns(:user)))
+        post :create, :params => { :user => @attr }
+        expect(response).to redirect_to(user_path(assigns(:user)))
       end    
 
       it "should have a welcome message" do
         post :create, :params => { :user => @attr }
-        flash[:success].should =~ /welcome to the sample app/i
+        expect(flash[:success]).to match(/welcome to the sample app/i)
       end
 
       it "should sign the user in" do
         post :create, :params => { :user => @attr }
-        controller.should be_signed_in
+        expect(controller).to be_signed_in
       end
       
     end
@@ -280,12 +280,12 @@ RSpec.describe UsersController, :type => :controller do
 
       it "should deny access to 'edit'" do
         get :edit, :params => { :id => @user }
-        response.should redirect_to(signin_path)
+        expect(response).to redirect_to(signin_path)
       end
 
       it "should deny access to 'update'" do
         put :update, :params => { :id => @user, :user => {} }
-        response.should redirect_to(signin_path)
+        expect(response).to redirect_to(signin_path)
       end
     end
 
@@ -298,12 +298,12 @@ RSpec.describe UsersController, :type => :controller do
 
       it "should require matching users for 'edit'" do
         get :edit, :params => { :id => @user }
-        response.should redirect_to(root_path)
+        expect(response).to redirect_to(root_path)
       end
 
       it "should require matching users for 'update'" do
         put :update, :params => { :id => @user, :user => {} }
-        response.should redirect_to(root_path)
+        expect(response).to redirect_to(root_path)
       end
     end
   end
@@ -317,7 +317,7 @@ RSpec.describe UsersController, :type => :controller do
     describe "as a non-signed-in user" do
       it "should deny access" do
         delete :destroy, :params => { :id => @user }
-        response.should redirect_to(signin_path)
+        expect(response).to redirect_to(signin_path)
       end
     end
 
@@ -325,7 +325,7 @@ RSpec.describe UsersController, :type => :controller do
       it "should protect the page" do
         test_sign_in(@user)
         delete :destroy, :params => { :id => @user }
-        response.should redirect_to(root_path)
+        expect(response).to redirect_to(root_path)
       end
     end
 
@@ -344,7 +344,7 @@ RSpec.describe UsersController, :type => :controller do
 
       it "should redirect to the users page" do
         delete :destroy, :params => { :id => @user }
-        response.should redirect_to(users_path)
+        expect(response).to redirect_to(users_path)
       end
     end
   end
@@ -355,12 +355,12 @@ RSpec.describe UsersController, :type => :controller do
 
       it "should protect 'following'" do
         get :following, :params => { :id => 1 }
-        response.should redirect_to(signin_path)
+        expect(response).to redirect_to(signin_path)
       end
 
       it "should protect 'followers'" do
         get :followers, :params => { :id => 1 }
-        response.should redirect_to(signin_path)
+        expect(response).to redirect_to(signin_path)
       end
     end
 

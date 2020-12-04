@@ -29,9 +29,9 @@ describe MicropostsController do
       end
 
       it "should not create a micropost" do
-        lambda do
+        expect do
           post :create, :params => { :micropost => @attr }
-        end.should_not change(Micropost, :count)
+        end.not_to change(Micropost, :count)
       end
 
       it "should render the home page" do
@@ -47,9 +47,9 @@ describe MicropostsController do
       end
 
       it "should create a micropost" do
-        lambda do
+        expect do
           post :create, :params => { :micropost => @attr }
-        end.should change(Micropost, :count).by(1)
+        end.to change(Micropost, :count).by(1)
       end
 
       it "should redirect to the home page" do
@@ -89,9 +89,9 @@ describe MicropostsController do
       end
 
       it "should destroy the micropost" do
-        lambda do
+        expect do
           delete :destroy, :params => { :id => @micropost }
-        end.should change(Micropost, :count).by(-1)
+        end.to change(Micropost, :count).by(-1)
       end
     end
   end

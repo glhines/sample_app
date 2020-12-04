@@ -1,17 +1,17 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe RelationshipsController do
+RSpec.describe RelationshipsController, :type => :controller do
 
   describe "access control" do
   
     it "should require signin for create" do
       post :create
-      response.should redirect_to(signin_path)
+      expect(response).to redirect_to(signin_path)
     end
 
     it "should require signin for destroy" do
-      delete :destroy, :id => 1
-      response.should redirect_to(signin_path)
+      delete :destroy, :params => { :id => 1 }
+      expect(response).to redirect_to(signin_path)
     end
   end
 
@@ -23,17 +23,18 @@ describe RelationshipsController do
     end
 
     it "should create a relationship" do
-      lambda do
-        post :create, :relationship => { :followed_id => @followed }
-        response.should be_redirect
-      end.should change(Relationship, :count).by(1)
+      expect do
+        post :create, :params => { :relationship => { :followed_id => @followed } }
+        expect(response).to be_redirect
+      end.to change(Relationship, :count).by(1)
     end
 
     it "should create a relationship using Ajax" do
-      lambda do
-        xhr :post, :create, :relationship => { :followed_id => @followed }
-        response.should be_success
-      end.should change(Relationship, :count).by(1)
+      expect do
+        # xhr :post, :create, :relationship => { :followed_id => @followed }
+        post :create, xhr: true, :params => { :relationship => { :followed_id => @followed } }
+        expect(response).to have_http_status(:success)
+      end.to change(Relationship, :count).by(1)
     end
   end
 
@@ -47,17 +48,17 @@ describe RelationshipsController do
     end
 
     it "should destroy a relationship" do
-      lambda do
-        delete :destroy, :id => @relationship
-        response.should be_redirect
-      end.should change(Relationship, :count).by(-1)
+      expect do
+        delete :destroy, :params => { :id => @relationship }
+        expect(response).to be_redirect
+      end.to change(Relationship, :count).by(-1)
     end
 
     it "should destroy a relationship using Ajax" do
-      lambda do
-        xhr :delete, :destroy, :id => @relationship
-        response.should be_success
-      end.should change(Relationship, :count).by(-1)
+      expect do
+        delete :destroy, xhr: true, :params => { :id => @relationship }
+        expect(response).to have_http_status(:success)
+      end.to change(Relationship, :count).by(-1)
     end
   end
 end
