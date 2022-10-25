@@ -44,7 +44,7 @@ end
 
 # Bundle the extra gems:
 # gem 'bj'
-gem 'nokogiri', '~> 1.13.4'
+gem 'nokogiri', '~> 1.13.9'
 # gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'aws-s3', :require => 'aws/s3'
 
