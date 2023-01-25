@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 6.0.6'
+gem 'rails', '~> 6.1.7'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -47,6 +47,7 @@ end
 gem 'nokogiri', '~> 1.13.10'
 # gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'aws-s3', :require => 'aws/s3'
+gem 'net-http'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
