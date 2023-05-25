@@ -1,57 +1,94 @@
-source 'http://rubygems.org'
+source "http://rubygems.org"
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem 'rails', '~> 6.1.7'
+ruby "3.2.2"
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 
-gem 'sqlite3', '1.4.2'
-gem 'tzinfo-data'
-gem 'gravatar_image_tag', '1.2.0'
-gem 'will_paginate', '3.3.0'
+# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem "sprockets-rails"
+
+# Use sqlite3 as the database for Active Record
+gem "sqlite3", "~> 1.4", ">= 1.4.2"
+
+# Use the Puma web server [https://github.com/puma/puma]
+gem "puma", "~> 5.0"
+
+# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+gem "importmap-rails"
+
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails"
+
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails"
+
+# Build JSON APIs with ease [https://github.com/rails/jbuilder]
+gem "jbuilder"
+
+# Use Redis adapter to run Action Cable in production
+gem "redis", "~> 4.0"
+
+# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
+# gem "kredis"
+
+# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
+# gem "bcrypt", "~> 3.1.7"
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
+
+# Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", require: false
+
+# Use Sass to process CSS
+# gem "sassc-rails"
+
+# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
+# gem "image_processing", "~> 1.2"
+
+# Use for getting gravatar image of a user
+# gem "gravatar_image_tag", "1.2.0" #currently still uses deprecated URI#escape
+# Currently bypassing this gem in users_helper.rb with direct call to gravatar.com
+
+# Use for views needing pagination
+gem "will_paginate", "3.3.0"
 
 group :development do
-  gem 'annotate', '2.4.0'
-  gem 'faker', '0.3.1'
+  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem "web-console"
+
+  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
+  # gem "rack-mini-profiler"
+
+  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
+  # gem "spring"
+
+  gem "annotate", "2.4.0"
+  gem "faker", "0.3.1"
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 4.0.1'
-  gem 'capybara', '3.33.0'
-  gem 'factory_bot_rails', '6.1.0'
-  gem 'rails-controller-testing', '1.0.5'
+  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem "debug", platforms: %i[ mri mingw x64_mingw ]
+
+  gem "rspec-rails", "~> 4.0.1"
+  gem "capybara"
+  gem "factory_bot_rails", "6.1.0"
+  gem "rails-controller-testing", "1.0.5"
 end
 
 group :test do
-  gem 'webrat', '0.7.1'
-  # gem 'spork', '0.9.0.rc8'
-  # gem 'factory_girl_rails', '1.0'
-  # gem 'autotest', '4.4.6'
-  # gem 'autotest-rails-pure', '4.1.2'
-  # gem 'autotest-standalone', '4.5.5'
-  # gem 'autotest-growl', '0.2.9'
-end
+# Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  gem "selenium-webdriver"
+  gem "webdrivers"
 
-# Use unicorn as the web server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
-# gem 'ruby-debug'
-# gem 'ruby-debug19', :require => 'ruby-debug'
+  gem "webrat", "0.7.1"
+  end
 
 # Bundle the extra gems:
 # gem 'bj'
-gem 'nokogiri', '~> 1.13.10'
-# gem 'sqlite3-ruby', :require => 'sqlite3'
+gem "nokogiri", "~> 1.14", ">= 1.14.3"
 # gem 'aws-s3', :require => 'aws/s3'
-gem 'net-http'
-
-# Bundle gems for the local environment. Make sure to
-# put test-only gems in this group so their generators
-# and rake tasks are available in development mode:
-# group :development, :test do
-#   gem 'webrat'
-# end
+gem "net-http"
