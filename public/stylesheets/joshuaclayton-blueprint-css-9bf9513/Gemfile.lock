@@ -37,7 +37,7 @@ GEM
     json_pure (1.5.1)
     mime-types (1.16)
     mini_portile2 (2.5.1)
-    nokogiri (1.15.2)
+    nokogiri (1.16.2)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     racc (~> 1.5.2)
