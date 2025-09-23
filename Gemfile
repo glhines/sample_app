@@ -73,7 +73,7 @@ group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
 
-  gem "rspec-rails", "~> 4.0.1"
+  gem "rspec-rails", "~> 7.1", ">= 7.1.1"
   gem "capybara"
   gem "factory_bot_rails", "6.1.0"
   gem "rails-controller-testing", "1.0.5"
@@ -88,6 +88,6 @@ end
 
 # Bundle the extra gems:
 # gem 'bj'
-gem "nokogiri", "~> 1.16", ">= 1.16.5"
+gem "nokogiri", "~> 1.18", ">= 1.18.4"
 # gem 'aws-s3', :require => 'aws/s3'
 gem "net-http"
