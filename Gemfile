@@ -88,6 +88,6 @@ end
 
 # Bundle the extra gems:
 # gem 'bj'
-gem "nokogiri", "~> 1.18", ">= 1.18.4"
+gem "nokogiri", "~> 1.19", ">= 1.19.4"
 # gem 'aws-s3', :require => 'aws/s3'
 gem "net-http"
